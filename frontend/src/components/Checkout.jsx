@@ -5,9 +5,9 @@ import { ModelContext } from '../contexts/modalContext';
 
 function Checkout({ totalPrice }) {
 
-    const { setCheckout, handlePlaceOrder, cart} = useContext(OrderContext);
-    const {handleClose} = useContext(ModelContext)
-
+    const { setCheckout, handlePlaceOrder } = useContext(OrderContext);
+    const { handleClose, cart } = useContext(ModelContext);
+    console.log(cart);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -22,34 +22,53 @@ function Checkout({ totalPrice }) {
             ...prev, [name]: value
         }));
     }
-    const handleSubmit = (e) => {
+
+    const cartData = cart.map(item => ({
+        quantity: item.count,
+        name: item.name,
+        price: item.price,
+    }));
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
         const isEmptyField = Object.values(formData).some((value) => value.trim() === "");
         if (isEmptyField) {
             alert("Please fill in all the fields correctly.");
             return;
         }
-        setFormData({
-            name: "",
-            email: "",
-            street: "",
-            code: "",
-            city: ""
-        });
-        handlePlaceOrder();
 
-        fetch('http://localhost:3000/orders',{
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                order :{
-                    items: cart.items,
-                    customer : setFormData
-                }
-            })
-        })
+        try {
+            const response = await fetch('http://localhost:3000/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    order: {
+                        customer: formData,
+                        orderinfo : cartData,
+                        total : totalPrice,
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                alert("Error: " + errorData.message);
+                return;
+            }
+            setFormData({
+                name: "",
+                email: "",
+                street: "",
+                code: "",
+                city: ""
+            });
+
+        } catch (error) {
+            console.error("Error submitting form:", error);
+            alert("Something went wrong!");
+        }
+        handlePlaceOrder();
     };
 
     return (

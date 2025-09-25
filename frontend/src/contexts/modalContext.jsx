@@ -10,7 +10,7 @@ function ModalContextProvider({ children }) {
     
     const [open, setOpen] = useState(false);
     const [cart, setCart] = useState([]);
-
+    const [myorder, setMyorder] = useState(false);
     const handleOpen = (meal) => {
         setOpen(true);
         setCheckout(false);
@@ -30,11 +30,16 @@ function ModalContextProvider({ children }) {
     };
     const handleClose = () => {
         setOpen(false);
+        setMyorder(false);
         setCart([]);
     }
 
+    const handleMyOrder = () =>{
+        setMyorder(true);
+        setOpen(true);
+    }
     return (
-        <ModelContext.Provider value={{ handleOpen, cart, setOpen, open, handleClose, setCart}}>
+        <ModelContext.Provider value={{ handleOpen, cart, setOpen, open, handleClose, setCart, handleMyOrder, myorder}}>
             {children}
         </ModelContext.Provider>
     );

@@ -7,6 +7,7 @@ import OrderPlace from './OrderPlace';
 import { useContext } from 'react';
 import { ModelContext } from '../contexts/modalContext';
 import { OrderContext } from '../contexts/OrderContextProvider';
+import MyOrder from './MyOrder';
 
 const style = {
     position: 'absolute',
@@ -23,7 +24,7 @@ const style = {
 
 // export default function Cart({ open, setOpen, cart, setCart, handleCheckout, checkout, setCheckout, order, handlePlaceOrder}) 
 export default function Cart() {
-    const { setCart, cart, setOpen, open, handleClose } = useContext(ModelContext)
+    const { setCart, cart, setOpen, open, handleClose,myorder } = useContext(ModelContext)
     const {handleCheckout, handlePlaceOrder, checkout, order} = useContext(OrderContext);
 
     const addMore = () => {
@@ -70,6 +71,8 @@ export default function Cart() {
                 <Box sx={style} >
 
                     <div className='model'>
+                        {!myorder ? (
+                        <div className='cart-info'>
                         {!checkout ? (
                             <div>
                                 <div className='card-header'>
@@ -103,6 +106,12 @@ export default function Cart() {
                                 ) : (
                                     <OrderPlace />
                                 )}
+                            </div>
+                        )}
+                        </div>
+                        ):(
+                            <div>
+                               <MyOrder/>
                             </div>
                         )}
                     </div>
