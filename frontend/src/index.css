@@ -322,6 +322,9 @@ button.add-more {
 table {
     width: 100%;
 }
+table td {
+  text-align: center;
+}
 @keyframes fade-slide-up {
   from {
     opacity: 0;

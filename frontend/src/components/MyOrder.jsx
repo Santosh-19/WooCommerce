@@ -1,22 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ModelContext } from "../contexts/modalContext";
+import { OrderContext } from "../contexts/OrderContextProvider";
 import { useContext } from "react";
 
 const MyOrder = () => {
     const { handleClose } = useContext(ModelContext);
-    const [orderHistory, setOrderHistory] = useState([]);
-    useEffect(() => {
-        const fetchOrder = async () => {
-            const response = await fetch('http://localhost:3000/orders');
-            if (!response.ok) {
-                throw new Error("Failed To fetch Meals");
-            }
-            const data = await response.json();
-            setOrderHistory(data);
-        };
-        fetchOrder();
-    }, [])
-    console.log(orderHistory);
+    const {orderHistory} = useContext(OrderContext);
     return (
         <>
             <div className='checkout'>
